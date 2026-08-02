@@ -21,14 +21,26 @@ const Hero = () => {
 
   const toggleVideo = (e) => {
     e.stopPropagation();
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsPlaying(true);
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused) {
+      // play() returns a promise; guard against it being interrupted by a
+      // subsequent pause() (rapid toggling) to avoid the AbortError.
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch(() => {
+            // Playback was interrupted before it could start; keep state paused.
+            setIsPlaying(false);
+          });
       } else {
-        videoRef.current.pause();
-        setIsPlaying(false);
+        setIsPlaying(true);
       }
+    } else {
+      video.pause();
+      setIsPlaying(false);
     }
   };
 
