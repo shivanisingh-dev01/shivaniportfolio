@@ -21,14 +21,27 @@ const Hero = () => {
 
   const toggleVideo = (e) => {
     e.stopPropagation();
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsPlaying(true);
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused) {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            // Ignore AbortError caused by a pause() interrupting play()
+            if (err?.name !== 'AbortError') {
+              console.log('[v0] video play error:', err?.message);
+            }
+            setIsPlaying(false);
+          });
       } else {
-        videoRef.current.pause();
-        setIsPlaying(false);
+        setIsPlaying(true);
       }
+    } else {
+      video.pause();
+      setIsPlaying(false);
     }
   };
 
