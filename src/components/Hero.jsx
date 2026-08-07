@@ -163,7 +163,9 @@ const Hero = () => {
             {/* Resume Download Button */}
             <a 
               href={heroContent.ctaResume.href}
-              download
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View Shivani Singh's resume"
               className="px-4 py-2 md:px-6 md:py-2 text-xs md:text-base rounded-full bg-transparent border border-white/50 text-white font-semibold hover:bg-white hover:text-black transition-all duration-300 backdrop-blur-md flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
